@@ -12,11 +12,23 @@ import android.webkit.WebView;
 
 public class OffscreenWebView extends WebView {
     private static final String TAG = "OffscreenWebView";
+    private static final String MSG_TEMPLATE = "" +
+            "<!doctype html>" +
+            "<html>" +
+            "<head>" +
+            "   <link href=\"message.css\" type=\"text/css\" rel=\"stylesheet\"/>" +
+            "</head>" +
+            "<body>" +
+            "   <h1> %s </h1>" +
+            "   <p> %s </p>" +
+            "</body>" +
+            "</html>";
 
     public static final int WEBVIEW_WIDTH = 800;
     public static final int WEBVIEW_HEIGHT = 600;
 
     Surface mSurface;
+    String mMsgTitle;
     Handler mHandler;
 
     @SuppressLint("SetJavaScriptEnabled")
@@ -28,14 +40,23 @@ public class OffscreenWebView extends WebView {
             this.getSettings().setDomStorageEnabled(true);
             this.setInitialScale(100);
         });
+
+        mMsgTitle = Utils.getVersionName(context);
     }
 
     public void setSurface(Surface surface) {
         mSurface = surface;
     }
 
+    public void setMessage(String msg) {
+        mHandler.post(() -> this.loadDataWithBaseURL("file:///android_asset/", String.format(MSG_TEMPLATE, mMsgTitle, msg), "text/html; charset=utf-8", "UTF-8", null));
+    }
+
     public void setURL(String url) {
-        mHandler.post(() -> this.loadUrl(url));
+//        mHandler.post(() -> this.loadUrl(url));
+
+        // debug:
+        setMessage(url);
     }
 
     public void applyWebViewInteractionEvent(int type, float x, float y) {
