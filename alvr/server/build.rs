@@ -11,12 +11,22 @@ fn main() {
         .collect::<Vec<_>>();
 
     let source_files_paths = cpp_paths.iter().filter(|path| {
-        path.extension()
+        let has_ext = path.extension()
             .filter(|ext| {
                 let ext_str = ext.to_string_lossy();
                 ext_str == "c" || ext_str == "cpp"
             })
-            .is_some()
+            .is_some();
+        if !has_ext {
+            return false;
+        }
+        let path_str = path.to_str().unwrap();
+        let file_content = std::fs::read_to_string(path.clone()).expect("Ohno");
+        return !file_content.contains("inet_ntop(") && !file_content.contains("Util.h")
+            && !path_str.ends_with("Settings.cpp")
+            && !path_str.ends_with("Logger.cpp")
+            && !path_str.ends_with("ThrottlingBuffer.cpp")
+            && !path_str.ends_with("d3drender.cpp")
     });
 
     let mut build = cc::Build::new();
@@ -35,7 +45,11 @@ fn main() {
         .define("_WINSOCKAPI_", None)
         .define("_MBCS", None)
         .define("_MT", None)
-        .define("_DLL", None);
+        .define("_DLL", None)
+        .flag("-I/usr/include/wine/wine/windows")
+        .flag("-fpermissive")
+
+    ;
 
     #[cfg(debug_assertions)]
     build.define("ALVR_DEBUG_LOG", None);

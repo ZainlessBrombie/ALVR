@@ -1,6 +1,7 @@
 //===================== Copyright (c) Valve Corporation. All Rights Reserved. ======================
 #include "systemtime.h"
 #include <windows.h>
+#include "sysinfoapi.h"
 
 static bool s_bInitialized = false;
 static uint64_t s_nTicksPerSecond = 0;

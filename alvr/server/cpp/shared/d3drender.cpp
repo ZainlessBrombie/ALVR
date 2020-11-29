@@ -1,8 +1,9 @@
 //===================== Copyright (c) Valve Corporation. All Rights Reserved. ======================
 #include "d3drender.h"
-#include <D3d11_4.h>
-#include <Evntprov.h>
-
+#include <d3d11_4.h>
+#include <evntprov.h>
+#include "evntprov.h"
+#include "ws2tcpip.h"
 #pragma comment( lib, "dxgi.lib" )
 #pragma comment( lib, "d3d11.lib" )
 #pragma comment( lib, "Rpcrt4.lib" )
@@ -103,10 +104,7 @@ namespace
 
 //--------------------------------------------------------------------------------------------------
 //--------------------------------------------------------------------------------------------------
-void EventWriteString( const wchar_t* pwchEvent )
-{
-	::EventWriteString( s_eventHelper.handle, 0, 0, pwchEvent );
-}
+
 
 //--------------------------------------------------------------------------------------------------
 //--------------------------------------------------------------------------------------------------

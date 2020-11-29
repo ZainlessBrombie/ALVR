@@ -332,7 +332,7 @@ namespace amf
         return m_AsyncAction != nullptr;
     }
 
-    void amf::ExitThread()
+    void ExitThread()
     {}
 
     //#endif//#if defined(METRO_APP)
@@ -443,7 +443,7 @@ namespace amf
         return m_pThread != (uintptr_t)-1L;
     }
     //----------------------------------------------------------------------------
-    void amf::ExitThread()
+    void ExitThread()
     {
         _endthread();
     }

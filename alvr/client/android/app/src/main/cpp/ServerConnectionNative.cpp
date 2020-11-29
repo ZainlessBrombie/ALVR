@@ -11,7 +11,7 @@
 #include <memory>
 #include <jni.h>
 #include <sys/socket.h>
-#include <arpa/inet.h>
+#include <wininet.h>
 #include <unistd.h>
 #include <new>
 #include <stack>

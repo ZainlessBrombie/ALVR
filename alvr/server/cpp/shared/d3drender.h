@@ -10,8 +10,6 @@
 #include <vector>
 #include <string>
 
-void EventWriteString( const wchar_t* pwchEvent ); // gpuview event
-
 #define SAFE_RELEASE( x ) if ( x ) { ( x )->Release(); ( x ) = NULL; }
 
 class CD3DRender

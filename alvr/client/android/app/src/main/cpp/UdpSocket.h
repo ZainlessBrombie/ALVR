@@ -2,7 +2,7 @@
 #define ALVRCLIENT_UDPSOCKET_H
 
 #include <sys/socket.h>
-#include <arpa/inet.h>
+#include <wininet.h>
 #include <jni.h>
 
 #include <list>

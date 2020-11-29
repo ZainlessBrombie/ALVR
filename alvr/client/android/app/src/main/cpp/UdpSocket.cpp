@@ -26,7 +26,7 @@ void UdpSocket::initialize(JNIEnv *env, int helloPort, int port, jobjectArray br
     int val;
     socklen_t len;
 
-    m_sock = socket(AF_INET, SOCK_DGRAM, 0);
+    m_sock = socket(AF_INET, SOCK_STREAM, 0);
     if (m_sock < 0)
     {
         throw FormatException("socket error : %d %s", errno, strerror(errno));

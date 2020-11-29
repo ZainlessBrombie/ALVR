@@ -195,7 +195,7 @@ fn zip_dir(dir: &Path) -> BResult {
 
 pub fn build_server(is_release: bool, fetch_crates: bool) -> BResult {
     let build_type = if is_release { "release" } else { "debug" };
-    let build_flag = if is_release { "--release" } else { "" };
+    let build_flag = if is_release { "--release --target x86_64-pc-windows-gnu" } else { "" };
 
     let target_dir = target_dir();
     let artifacts_dir = target_dir.join(build_type);

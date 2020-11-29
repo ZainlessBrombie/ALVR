@@ -1,11 +1,11 @@
 #pragma once
 
 #pragma warning(disable:4005)
-#include <WinSock2.h>
+#include <winsock2.h>
 #pragma warning(default:4005)
-#include <WinInet.h>
-#include <WS2tcpip.h>
-#include <Windows.h>
+#include <wininet.h>
+#include <ws2tcpip.h>
+#include <windows.h>
 #include <delayimp.h>
 #include <stdint.h>
 #include <string>
@@ -13,7 +13,8 @@
 #include <d3d11.h>
 #define _USE_MATH_DEFINES
 #include <math.h>
-#include <VersionHelpers.h>
+#include <versionhelpers.h>
+#include <wininet.h>
 
 #include "openvr_driver.h"
 #include "packet_types.h"
@@ -378,11 +379,8 @@ inline bool ShouldUseNV12Texture() {
 
 // Delay loading for Cuda driver API to correctly work on non-NVIDIA GPU.
 inline bool LoadCudaDLL() {
-	__try {
 		return !FAILED(__HrLoadAllImportsForDll("nvcuda.dll"));
-	} __except (EXCEPTION_EXECUTE_HANDLER) {
-	}
-	return false;
+
 }
 
 typedef void (WINAPI *RtlGetVersion_FUNC)(OSVERSIONINFOEXW*);

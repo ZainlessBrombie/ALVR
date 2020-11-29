@@ -1,3 +1,5 @@
+#include "ws2tcpip.h"
+#include <wininet.h>
 #include "Poller.h"
 #include "Logger.h"
 #include "Utils.h"
@@ -71,7 +73,7 @@ void Poller::WakeLater(uint64_t elapsedMs)
 
 bool Poller::BindQueueSocket()
 {
-	mQueueSocket = socket(AF_INET, SOCK_DGRAM, 0);
+	mQueueSocket = socket(AF_INET, SOCK_STREAM, 0);
 	if (mQueueSocket == INVALID_SOCKET) {
 		Error("Poller::BindQueueSocket socket creation error: %d %ls\n", WSAGetLastError(), GetErrorStr(WSAGetLastError()).c_str());
 		return false;

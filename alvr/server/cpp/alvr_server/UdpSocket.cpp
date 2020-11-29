@@ -104,7 +104,7 @@ void UdpSocket::SetClientAddr(const sockaddr_in * addr)
 
 bool UdpSocket::BindSocket()
 {
-	mSocket = socket(AF_INET, SOCK_DGRAM, 0);
+	mSocket = socket(AF_INET, SOCK_STREAM, 0);
 	if (mSocket == INVALID_SOCKET) {
 		Error("UdpSocket::BindSocket socket creation error: %d %ls\n", WSAGetLastError(), GetErrorStr(WSAGetLastError()).c_str());
 		return false;
