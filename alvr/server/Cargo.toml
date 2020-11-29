@@ -1,6 +1,6 @@
 [package]
 name = "alvr_server"
-version = "13.0.0"
+version = "13.1.0"
 authors = ["Riccardo Zaglia <riccardo.zaglia5@gmail.com>"]
 license = "MIT"
 edition = "2018"
@@ -32,4 +32,4 @@ webbrowser = "0.5"
 [build-dependencies]
 walkdir = "2"
 cc = { version = "1", features = ["parallel"] }
-bindgen = "0.55"
+bindgen = "0.56"

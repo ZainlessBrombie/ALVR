@@ -1,6 +1,6 @@
 [package]
 name = "alvr_launcher"
-version = "12.0.0"
+version = "13.1.0"
 authors = ["Riccardo Zaglia <riccardo.zaglia5@gmail.com>"]
 license = "MIT"
 edition = "2018"
@@ -13,7 +13,7 @@ tempfile = "3"
 alcro = "0.4"
 alvr_common = { path = "../common" }
 single-instance = "0.1"
-self_update = { version = "0.21", features = ["archive-zip"] }
+self_update = { version = "0.22", features = ["archive-zip"] }
 reqwest = "0.10"
 zip = "0.5"
 
