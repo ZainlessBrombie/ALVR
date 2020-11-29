@@ -22,6 +22,7 @@ public:
     int send(const void *buf, size_t len);
     void recv();
     void disconnect();
+    void tryGatewayConnect(const void *buf, size_t len);
 
     //
     // Callback

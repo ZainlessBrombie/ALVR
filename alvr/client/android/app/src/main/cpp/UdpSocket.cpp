@@ -159,6 +159,17 @@ int UdpSocket::getSocket() const
     return m_sock;
 }
 
+void UdpSocket::tryGatewayConnect(const void *buf, size_t len) {
+    for (const sockaddr_in &address : m_broadcastAddrList)
+    {
+        int broadcastEnable=1;
+        int disable  =0;
+        setsockopt(m_sock, SOL_SOCKET, SO_BROADCAST, &disable, sizeof(broadcastEnable));
+        sendto(m_sock, buf, len, 0, (sockaddr *) &address, sizeof(address));
+        setsockopt(m_sock, SOL_SOCKET, SO_BROADCAST, &broadcastEnable, sizeof(broadcastEnable));
+    }
+}
+
 void UdpSocket::sendBroadcast(const void *buf, size_t len)
 {
     for (const sockaddr_in &address : m_broadcastAddrList)

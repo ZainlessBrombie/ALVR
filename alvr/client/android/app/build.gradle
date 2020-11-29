@@ -67,7 +67,7 @@ dependencies {
     testImplementation 'junit:junit:4.12'
 }
 
-build.dependsOn(':extractNdk')
+//build.dependsOn(':extractNdk')
 
 cargo {
     module  = "../.."
@@ -80,5 +80,17 @@ cargo {
 tasks.whenTaskAdded { task ->
     if ((task.name == 'javaPreCompileDebug' || task.name == 'javaPreCompileRelease')) {
         task.dependsOn 'cargoBuild'
+    }
+}
+
+buildscript {
+    repositories {
+        google()
+        maven {
+            url "https://plugins.gradle.org/m2/"
+        }
+    }
+    dependencies {
+        classpath 'gradle.plugin.org.mozilla.rust-android-gradle:plugin:0.8.3'
     }
 }

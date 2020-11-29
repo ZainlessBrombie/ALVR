@@ -49,6 +49,7 @@ public:
     UdpSocket m_socket;
     time_t m_prevSentSync = 0;
     time_t m_prevSentBroadcast = 0;
+    time_t m_prevSentGateway = 0;
     int64_t m_timeDiff = 0;
     uint64_t timeSyncSequence = (uint64_t) -1;
     uint64_t m_lastReceived = 0;
@@ -262,7 +263,7 @@ void onPacketRecv(const char *packet, size_t packetSize) {
 
         if (g_socket.m_soundPlayer) {
             g_socket.m_soundPlayer->putData((uint8_t *) packet + sizeof(*header),
-                                   packetSize - sizeof(*header));
+                                            packetSize - sizeof(*header));
         }
 
         //LOG("Received audio frame start: Counter=%d Size=%d PresentationTime=%lu",
@@ -278,7 +279,7 @@ void onPacketRecv(const char *packet, size_t packetSize) {
 
         if (g_socket.m_soundPlayer) {
             g_socket.m_soundPlayer->putData((uint8_t *) packet + sizeof(*header),
-                                   packetSize - sizeof(*header));
+                                            packetSize - sizeof(*header));
         }
 
         //LOG("Received audio frame: Counter=%d", header->packetCounter);
@@ -289,9 +290,9 @@ void onPacketRecv(const char *packet, size_t packetSize) {
         auto header = (HapticsFeedback *) packet;
 
         g_socket.m_env->CallVoidMethod(g_socket.m_instance, g_socket.mOnHapticsFeedbackID,
-                              static_cast<jlong>(header->startTime),
-                              header->amplitude, header->duration, header->frequency,
-                              static_cast<jboolean>(header->hand));
+                                       static_cast<jlong>(header->startTime),
+                                       header->amplitude, header->duration, header->frequency,
+                                       static_cast<jboolean>(header->hand));
 
     } else if (type == ALVR_PACKET_TYPE_GUARDIAN_SYNC_ACK) {
         if (packetSize < sizeof(GuardianSyncStartAck)) {
@@ -309,14 +310,14 @@ void onPacketRecv(const char *packet, size_t packetSize) {
         auto ack = (GuardianSegmentAck *) packet;
 
         g_socket.m_env->CallVoidMethod(g_socket.m_instance, g_socket.mOnGuardianSegmentAckID,
-                              static_cast<jlong>(ack->timestamp),
-                              static_cast<jint>(ack->segmentIndex));
+                                       static_cast<jlong>(ack->timestamp),
+                                       static_cast<jint>(ack->segmentIndex));
     }
 }
 
 void initializeSocket(void *v_env, void *v_instance,
-                int helloPort, int port, void *v_deviceName, void *v_broadcastAddrList,
-                void *v_refreshRates, int renderWidth, int renderHeight) {
+                      int helloPort, int port, void *v_deviceName, void *v_broadcastAddrList,
+                      void *v_refreshRates, int renderWidth, int renderHeight) {
     auto *env = (JNIEnv *) v_env;
     auto *instance = (jobject) v_instance;
     auto *deviceName_ = (jstring) v_deviceName;
@@ -331,6 +332,7 @@ void initializeSocket(void *v_env, void *v_instance,
     g_socket.m_lastReceived = 0;
     g_socket.m_prevSentSync = 0;
     g_socket.m_prevSentBroadcast = 0;
+    g_socket.m_prevSentGateway = 0;
     g_socket.m_prevVideoSequence = 0;
     g_socket.m_prevSoundSequence = 0;
     g_socket.m_timeDiff = 0;
@@ -473,6 +475,19 @@ void sendBroadcastLocked() {
     g_socket.m_prevSentBroadcast = current;
 }
 
+void sendGatewayLocked() {
+    if (g_socket.m_socket.isConnected()) {
+        return;
+    }
+
+    time_t current = time(nullptr);
+    if (g_socket.m_prevSentGateway != current) {
+        LOGI("Sending broadcast hello.");
+        g_socket.m_socket.tryGatewayConnect(&g_socket.mHelloMessage, sizeof(g_socket.mHelloMessage));
+    }
+    g_socket.m_prevSentGateway = current;
+}
+
 void checkConnection() {
     if (g_socket.m_socket.isConnected()) {
         if (g_socket.m_lastReceived + CONNECTION_TIMEOUT < getTimestampUs()) {
@@ -492,6 +507,7 @@ void checkConnection() {
 void doPeriodicWork() {
     sendTimeSyncLocked();
     sendBroadcastLocked();
+    sendGatewayLocked();
     checkConnection();
 }
 
